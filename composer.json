@@ -1,0 +1,46 @@
+{
+    "name": "techquity/aero-sage",
+    "description": "Sage 50 integration for Aero Commerce",
+    "homepage": "https://github.com/techquityltd/aero-sage",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Kristen Colquhoun",
+            "email": "kristen.colquhoun@techquity.co.uk",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "aerocommerce/admin": "^1",
+        "aerocommerce/core": "^0",
+        "guzzlehttp/guzzle": "^6.3.1|^7.0.1",
+        "illuminate/support": "^6|^7|^8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Techquity\\Aero\\Sage\\": "src"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Techquity\\Aero\\Sage\\SageServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [{
+            "type": "composer",
+            "url": "https://agora.aerocommerce.com"
+        },
+        {
+            "type": "composer",
+            "url": "https://packages.aerocommerce.com"
+        }
+    ]
+}
