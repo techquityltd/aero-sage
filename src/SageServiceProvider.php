@@ -62,8 +62,20 @@ class SageServiceProvider extends ModuleServiceProvider
                 'link' => route('admin.sage.orders.send', [
                     'order' => $data['order']
                 ]),
-                'text' => 'Send to sage',
+                'text' => 'Send To Sage',
             ]);
+        });
+
+        AdminSlot::inject('orders.order.view.header.buttons', function ($data) {
+            if ($data['order']->additional('sage_order_ref')) {
+                return view('admin::resource-lists.button', [
+                    'permission' => 'order.update-status',
+                    'link' => route('admin.sage.orders.delete', [
+                        'order' => $data['order']
+                    ]),
+                    'text' => 'Delete From Sage',
+                ]);
+            }
         });
 
         $this->app->booted(static function () {
