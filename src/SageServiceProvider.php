@@ -11,7 +11,6 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Routing\Router;
 use Techquity\Aero\Sage\Jobs\UpdateProduct;
 use Techquity\Aero\Sage\Listeners\CompletedOrder;
-use Techquity\Aero\Sage\Services\SageManager;
 
 class SageServiceProvider extends ModuleServiceProvider
 {
@@ -20,14 +19,6 @@ class SageServiceProvider extends ModuleServiceProvider
             CompletedOrder::class,
         ],
     ];
-
-    public function register()
-    {
-        $this->app->singleton(
-            SageManager::class,
-            fn () => new SageManager(),
-        );
-    }
 
     public function setup(): void
     {
