@@ -9,6 +9,6 @@ class CompletedOrder
 {
     public function handle(OrderSuccessful $event): void
     {
-        SendSalesOrder::dispatch($event->order)->onQueue('sage');
+        SendSalesOrder::dispatch($event->order)->onQueue('sage_50');
     }
 }
