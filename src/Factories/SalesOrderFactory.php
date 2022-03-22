@@ -58,16 +58,27 @@ class SalesOrderFactory
             5 => (string) $this->order->billingAddress->postcode
         ]);
 
-        $this->setAddress('delAddress', [
-            1 => (string) $this->order->shippingAddress->line_1,
-            2 => (string) $this->order->shippingAddress->line_2,
-            4 => (string) $this->order->shippingAddress->city,
-            5 => (string) $this->order->shippingAddress->postcode
-        ]);
+        // Check for gift vouchers (as they don't have shipping)
+        if ($this->order->shippingAddress) {
+            $this->setAddress('delAddress', [
+                1 => (string) $this->order->shippingAddress->line_1,
+                2 => (string) $this->order->shippingAddress->line_2,
+                4 => (string) $this->order->shippingAddress->city,
+                5 => (string) $this->order->shippingAddress->postcode
+            ]);
+
+            $this->sales['carrNet'] = $this->order->shipping / 100;
+            $this->sales['carrTax'] = $this->order->shipping_tax / 100;
+        } else {
+            $this->setAddress('delAddress', [
+                1 => (string) $this->order->billingAddress->line_1,
+                2 => (string) $this->order->billingAddress->line_2,
+                4 => (string) $this->order->billingAddress->city,
+                5 => (string) $this->order->billingAddress->postcode
+            ]);
+        }
 
         $this->sales['netValueDiscountAmount'] = $this->order->discount / 100;
-        $this->sales['carrNet'] = $this->order->shipping / 100;
-        $this->sales['carrTax'] = $this->order->shipping_tax / 100;
 
         $this->sales['carrNomCode'] = "4905";
         $this->sales['carrTaxCode'] = 1;
