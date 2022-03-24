@@ -57,12 +57,14 @@ class CustomerFactory
             5 => (string) $this->order->billingAddress->postcode
         ]);
 
-        $this->setAddress('deliveryAddress', [
-            1 => (string) $this->order->shippingAddress->line_1,
-            2 => (string) $this->order->shippingAddress->line_2,
-            4 => (string) $this->order->shippingAddress->city,
-            5 => (string) $this->order->shippingAddress->postcode
-        ]);
+        if ($this->order->shippingAddress) {
+            $this->setAddress('deliveryAddress', [
+                1 => (string) $this->order->shippingAddress->line_1,
+                2 => (string) $this->order->shippingAddress->line_2,
+                4 => (string) $this->order->shippingAddress->city,
+                5 => (string) $this->order->shippingAddress->postcode
+            ]);
+        }
 
         $this->customer['countryCode'] = $this->order->billingAddress->country_code;
 
