@@ -5,6 +5,7 @@ namespace Techquity\Aero\Sage\Factories;
 use Aero\Cart\Models\Order;
 use Aero\Common\Models\Currency;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Traits\Macroable;
 
 class CustomerFactory
@@ -174,7 +175,7 @@ class CustomerFactory
 
         $response = json_decode($response->getBody()->getContents(), true);
 
-        if ($response['success']) {
+        if (isset($response['success'])) {
             $this->accountReference = $response['response'];
 
             if ($customer = $this->order->customer) {
@@ -183,6 +184,11 @@ class CustomerFactory
             } else {
                 $this->order->additional('sage_customer_ref', $this->accountReference);
             }
+        } else {
+            Log::error('Sage Response: ' . $response['Message'] ?? 'Issue importing customer', [
+                'integration' => 'sage_50',
+                'data' => $this->customer
+            ]);
         }
     }
 }
