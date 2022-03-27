@@ -47,7 +47,7 @@ class CustomerFactory
     {
         $this->setAccountReference();
 
-        $this->setName($this->order->billingAddress->company ?? $this->order->billingAddress->fullName);
+        $this->setName($this->order->billingAddress->company,  $this->order->billingAddress->fullName);
         $this->setContactName($this->order->billingAddress->fullName);
         $this->setTelephone(($this->order->billingAddress->mobile ?? $this->order->billingAddress->phone) ?? '');
 
@@ -95,13 +95,17 @@ class CustomerFactory
     /**
      * Validate and set the customers/companies name.
      */
-    protected function setName(string $name): void
+    protected function setName(?string $company, ?string $name): void
     {
-        if (strlen($name) >= 4 && strlen($name) <= 60) {
+        if (strlen($company) >= 4 && strlen($company) <= 60) {
+            $this->customer['name'] = $company;
+        } else if (strlen($name) >= 4 && strlen($name) <= 60) {
             $this->customer['name'] = $name;
+        } else {
+            Log::error("Sage Issue: {$this->order->reference} - customer name invalid for sage", [
+                'integration' => 'sage 50',
+            ]);
         }
-
-        // throw an exception as name is required
     }
 
     /**
@@ -186,7 +190,7 @@ class CustomerFactory
             }
         } else {
             Log::error('Sage Response: ' . $response['Message'] ?? 'Issue importing customer', [
-                'integration' => 'sage_50',
+                'integration' => 'sage 50',
                 'data' => $this->customer
             ]);
         }
