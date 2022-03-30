@@ -189,7 +189,9 @@ class CustomerFactory
                 $this->order->additional('sage_customer_ref', $this->accountReference);
             }
         } else {
-            Log::error('Sage Response: ' . $response['Message'] ?? 'Issue importing customer', [
+            $message = isset($response['Message']) ? $response['Message'] : ($response['message'] ?? 'Unknown');
+
+            Log::error('Sage Response: ' . $message ?? 'Issue importing customer', [
                 'integration' => 'sage 50',
                 'data' => $this->customer
             ]);
