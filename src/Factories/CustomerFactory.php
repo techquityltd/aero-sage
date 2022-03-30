@@ -179,7 +179,7 @@ class CustomerFactory
 
         $response = json_decode($response->getBody()->getContents(), true);
 
-        if (isset($response['success'])) {
+        if (isset($response['success']) && $response['success']) {
             $this->accountReference = $response['response'];
 
             if ($customer = $this->order->customer) {
