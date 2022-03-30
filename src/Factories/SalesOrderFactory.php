@@ -156,7 +156,13 @@ class SalesOrderFactory
     protected function setInvoiceItems()
     {
         $this->sales['invoiceItems'] = $this->order->items->map(function ($item) {
-            return [
+
+            // Extend using a macro
+            if ($this->hasMacro('extendItem')) {
+                $extend = $this->extendItem($item);
+            }
+
+            return array_merge($extend ?? [], [
                 'stockCode' => $item->sku,
                 'description' => $item->name,
                 'quantity' => $item->quantity,
@@ -167,7 +173,7 @@ class SalesOrderFactory
                 'discount' => round((($item->discount / $item->price) * 100), 2),
                 'discountAmount' => ($item->discount + $item->discount_tax) / 100,
                 'netAmount' => $item->price / 100,
-            ];
+            ]);
         })->toArray();
     }
 
