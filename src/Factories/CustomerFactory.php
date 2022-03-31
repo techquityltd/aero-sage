@@ -89,6 +89,8 @@ class CustomerFactory
         // Allow the option to override default reference generation
         if (!$this->existing && $this->hasMacro('generateAccountReference')) {
             $this->customer['accountRef'] = $this->generateAccountReference();
+        } elseif ($this->existing) {
+            $this->customer['accountRef'] = $this->accountReference;
         }
     }
 
