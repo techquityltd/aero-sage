@@ -170,8 +170,8 @@ class SalesOrderFactory
                 'taxRate' => round((($item->tax / $item->price) * 100), 2),
                 'taxCode' => 1,
                 'nominal' => 4001,
-                'discount' => round((($item->discount / $item->price) * 100), 2),
-                'discountAmount' => ($item->discount + $item->discount_tax) / 100,
+                'discount' => $item->discount / 100,
+                'discountAmount' => null,
                 'netAmount' => $item->price / 100,
             ]);
         })->toArray();
