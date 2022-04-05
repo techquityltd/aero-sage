@@ -171,7 +171,7 @@ class SalesOrderFactory
                 'taxCode' => 1,
                 'nominal' => 4001,
                 'discount' => $item->discount / 100,
-                'discountAmount' => null,
+                'discountAmount' => ($item->discount + $item->discount_tax) / 100,
                 'netAmount' => $item->price / 100,
             ]);
         })->toArray();
