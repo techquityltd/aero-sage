@@ -166,13 +166,13 @@ class SalesOrderFactory
                 'stockCode' => $item->sku,
                 'description' => $item->name,
                 'quantity' => $item->quantity,
-                'unitPrice' => ($item->price + $item->tax) / 100,
+                'unitPrice' => ($item->priceRounded - $item->discountRounded) / 100,
                 'taxRate' => round((($item->tax / $item->price) * 100), 2),
                 'taxCode' => 1,
                 'nominal' => 4001,
-                'discount' => $item->discount / 100,
-                'discountAmount' => ($item->discount + $item->discount_tax) / 100,
-                'netAmount' => $item->price / 100,
+                'discount' => $item->discountRounded / 100,
+                'discountAmount' => 0,
+                'netAmount' => round($item->price - $item->discount) / 100,
             ]);
         })->toArray();
     }
