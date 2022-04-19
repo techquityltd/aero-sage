@@ -172,7 +172,7 @@ class SalesOrderFactory
                 'nominal' => 4001,
                 'discount' => $item->discountRounded / 100,
                 'discountAmount' => 0,
-                'netAmount' => round($item->price - $item->discount) / 100,
+                'netAmount' => round(($item->price * $item->quantity) - $item->discount) / 100,
             ]);
         })->toArray();
     }
