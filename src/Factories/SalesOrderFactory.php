@@ -162,9 +162,16 @@ class SalesOrderFactory
                 $extend = $this->extendItem($item);
             }
 
+            $options = collect($item->options)
+                ->filter(fn ($item) => isset($item['name']) && isset($item['value']))
+                ->map(fn ($item) => "{$item['name']}: {$item['value']}")
+                ->implode(', ');
+
+            $options = empty($options) ? '' : " ({$options})";
+
             return array_merge($extend ?? [], [
                 'stockCode' => $item->sku,
-                'description' => $item->name,
+                'description' => $item->name . $options,
                 'quantity' => $item->quantity,
                 'unitPrice' => ($item->priceRounded - $item->discountRounded) / 100,
                 'taxRate' => round((($item->tax / $item->price) * 100), 2),
