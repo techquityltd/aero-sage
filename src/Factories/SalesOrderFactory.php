@@ -174,7 +174,7 @@ class SalesOrderFactory
                 'description' => $item->name . $options,
                 'quantity' => $item->quantity,
                 'unitPrice' => ($item->priceRounded - $item->discountRounded) / 100,
-                'taxRate' => round((($item->tax / $item->price) * 100), 2),
+                'taxRate' => ($item->subtotalTaxRounded > 0) ? round((($item->tax / $item->price) * 100), 2) : 0,
                 'taxCode' => ($item->subtotalTaxRounded > 0) ? 1 : 'T0',
                 'nominal' => 4001,
                 'discount' => $item->discountRounded / 100,
