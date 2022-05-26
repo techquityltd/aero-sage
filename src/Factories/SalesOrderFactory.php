@@ -67,8 +67,8 @@ class SalesOrderFactory
                 5 => (string) $this->order->shippingAddress->postcode
             ]);
 
-            $this->sales['carrNet'] = $this->order->shipping / 100;
-            $this->sales['carrTax'] = $this->order->shipping_tax / 100;
+            $this->sales['carrNet'] = round($this->order->shipping / 100, 2);
+            $this->sales['carrTax'] = round($this->order->shipping_tax / 100, 2);
         } else {
             $this->setAddress('delAddress', [
                 1 => (string) $this->order->billingAddress->line_1,
@@ -78,7 +78,7 @@ class SalesOrderFactory
             ]);
         }
 
-        $this->sales['netValueDiscountAmount'] = $this->order->discount / 100;
+        $this->sales['netValueDiscountAmount'] = round($this->order->discount / 100, 2);
 
         $this->sales['carrNomCode'] = "4905";
         $this->sales['carrTaxCode'] = 1;
