@@ -99,6 +99,9 @@ class CustomerFactory
      */
     protected function setName(?string $company, ?string $name): void
     {
+        $company = preg_replace("/[^A-Za-z]/", "", $company);
+        $name = preg_replace("/[^A-Za-z]/", "", $name);
+
         if (strlen($company) >= 4 && strlen($company) <= 60) {
             $this->customer['name'] = $company;
         } else if (strlen($name) >= 4 && strlen($name) <= 60) {
