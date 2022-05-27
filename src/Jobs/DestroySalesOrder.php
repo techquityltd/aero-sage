@@ -42,7 +42,7 @@ class DestroySalesOrder implements ShouldQueue
             } else {
                 Log::error($response['message'], [
                     'integration' => 'Sage 50',
-                    'salesOrder' => $this->sales
+                    'response' => $response
                 ]);
             }
         }

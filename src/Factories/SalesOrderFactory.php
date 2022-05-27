@@ -173,10 +173,11 @@ class SalesOrderFactory
                 'stockCode' => $item->sku,
                 'description' => $item->name . $options,
                 'quantity' => $item->quantity,
-                'unitPrice' => ($item->priceRounded - $item->discountRounded) / 100,
+                'unitPrice' => ($item->priceRounded) / 100,
                 'taxRate' => ($item->subtotalTaxRounded > 0) ? round((($item->tax / $item->price) * 100), 2) : 0,
                 'taxCode' => ($item->subtotalTaxRounded > 0) ? 1 : 0,
                 'nominal' => 4001,
+
                 'discount' => $item->discountRounded / 100,
                 'discountAmount' => 0,
                 'netAmount' => round(($item->price * $item->quantity) - $item->discount) / 100,

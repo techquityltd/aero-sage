@@ -99,12 +99,12 @@ class CustomerFactory
      */
     protected function setName(?string $company, ?string $name): void
     {
-        $company = preg_replace("/[^A-Za-z]/", "", $company);
-        $name = preg_replace("/[^A-Za-z]/", "", $name);
+        $spacelessCompany = preg_replace("/[^A-Za-z]/", "", $company);
+        $spacelessName = preg_replace("/[^A-Za-z]/", "", $name);
 
-        if (strlen($company) >= 4 && strlen($company) <= 60) {
+        if (strlen($spacelessCompany) >= 4 && strlen($spacelessCompany) <= 60) {
             $this->customer['name'] = $company;
-        } else if (strlen($name) >= 4 && strlen($name) <= 60) {
+        } else if (strlen($spacelessName) >= 4 && strlen($spacelessName) <= 60) {
             $this->customer['name'] = $name;
         } else {
             Log::error("Sage Issue: {$this->order->reference} - customer name invalid for sage", [
