@@ -78,7 +78,7 @@ class SalesOrderFactory
             ]);
         }
 
-        $this->sales['netValueDiscountAmount'] = round($this->order->discount / 100, 2);
+        //this->sales['netValueDiscountAmount'] = round($this->order->discount / 100, 2);
 
         $this->sales['carrNomCode'] = "4905";
         $this->sales['carrTaxCode'] = 1;
@@ -173,11 +173,10 @@ class SalesOrderFactory
                 'stockCode' => $item->sku,
                 'description' => $item->name . $options,
                 'quantity' => $item->quantity,
-                'unitPrice' => ($item->priceRounded) / 100,
+                'unitPrice' => $item->priceRounded / 100,
                 'taxRate' => ($item->subtotalTaxRounded > 0) ? round((($item->tax / $item->price) * 100), 2) : 0,
                 'taxCode' => ($item->subtotalTaxRounded > 0) ? 1 : 0,
                 'nominal' => 4001,
-
                 'discount' => $item->discountRounded / 100,
                 'discountAmount' => 0,
                 'netAmount' => round(($item->price * $item->quantity) - $item->discount) / 100,
