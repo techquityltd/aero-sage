@@ -206,7 +206,8 @@ class CustomerFactory
 
             Log::error('Sage Response: ' . $message ?? 'Issue importing customer', [
                 'integration' => 'sage 50',
-                'data' => $this->customer
+                'data' => $this->customer,
+                'response' => $response
             ]);
         }
     }

@@ -209,14 +209,15 @@ class SalesOrderFactory
             if (setting('sage_50.debug_mode')) {
                 Log::debug('Sage Customer ', [
                     'integration' => 'sage 50',
-                    'request' => $this->customer,
+                    'request' => $this->sales,
                     'response' => $response
                 ]);
             }
         } else {
             Log::error($response['message'], [
                 'integration' => 'Sage 50',
-                'salesOrder' => $this->sales
+                'salesOrder' => $this->sales,
+                'response' => $response
             ]);
         }
     }
