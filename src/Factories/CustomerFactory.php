@@ -195,7 +195,7 @@ class CustomerFactory
             }
 
             if (setting('sage_50.debug_mode')) {
-                Log::debug('Sage Customer ', [
+                Log::debug('Sage Order', [
                     'integration' => 'sage 50',
                     'request' => $this->customer,
                     'response' => $response
