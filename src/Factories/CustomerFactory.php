@@ -28,7 +28,7 @@ class CustomerFactory
         if ($order->customer && $order->customer->sage_account_id) {
             $this->accountReference = $order->customer->sage_account_id;
             $this->existing = true;
-        } else if ($reference = $this->order->additional('sage_customer_ref')) {
+        } elseif ($reference = $this->order->additional('sage_customer_ref')) {
             $this->accountReference = $reference;
             $this->existing = true;
         }
@@ -47,7 +47,7 @@ class CustomerFactory
     {
         $this->setAccountReference();
 
-        $this->setName($this->order->billingAddress->company,  $this->order->billingAddress->fullName);
+        $this->setName($this->order->billingAddress->company, $this->order->billingAddress->fullName);
         $this->setContactName($this->order->billingAddress->fullName);
         $this->setTelephone(($this->order->billingAddress->mobile ?? $this->order->billingAddress->phone) ?? '');
 
@@ -104,7 +104,7 @@ class CustomerFactory
 
         if (strlen($spacelessCompany) >= 4 && strlen($spacelessCompany) <= 60) {
             $this->customer['name'] = $company;
-        } else if (strlen($spacelessName) >= 4 && strlen($spacelessName) <= 60) {
+        } elseif (strlen($spacelessName) >= 4 && strlen($spacelessName) <= 60) {
             $this->customer['name'] = $name;
         } else {
             Log::error("Sage Issue: {$this->order->reference} - customer name invalid for sage", [
@@ -192,6 +192,14 @@ class CustomerFactory
                 $customer->save();
             } else {
                 $this->order->additional('sage_customer_ref', $this->accountReference);
+            }
+
+            if (setting('sage_50.debug_mode')) {
+                Log::debug('Sage Customer ', [
+                    'integration' => 'sage 50',
+                    'request' => $this->customer,
+                    'response' => $response
+                ]);
             }
         } else {
             $message = isset($response['Message']) ? $response['Message'] : ($response['message'] ?? 'Unknown');

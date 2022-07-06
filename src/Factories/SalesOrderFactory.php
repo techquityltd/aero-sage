@@ -205,6 +205,14 @@ class SalesOrderFactory
 
         if ($response['success']) {
             $this->order->additional('sage_order_ref', $response['response']);
+
+            if (setting('sage_50.debug_mode')) {
+                Log::debug('Sage Customer ', [
+                    'integration' => 'sage 50',
+                    'request' => $this->customer,
+                    'response' => $response
+                ]);
+            }
         } else {
             Log::error($response['message'], [
                 'integration' => 'Sage 50',
