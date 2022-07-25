@@ -29,5 +29,9 @@ class SendSalesOrder implements ShouldQueue
 
         // Turn an aero product into a Sage product.
         resolve(SalesOrderFactory::class, ['order' => $this->order]);
+
+        // Crazy addition because in the event that there are 2 of these being processed at the same time the API will bork
+        // Make sure there is only 1 worker processing these jobs
+        sleep(1);
     }
 }

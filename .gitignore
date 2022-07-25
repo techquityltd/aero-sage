@@ -4,3 +4,4 @@ docs
 vendor
 coverage
 auth.json
+.idea/*
