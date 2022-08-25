@@ -74,10 +74,27 @@ class UpdateProduct implements ShouldQueue
                     }
 
                     if ($variant->isDirty() || $price->isDirty()) {
+
+                        if (setting('sage_50.superfluous_logging')) {
+                            Log::debug('Product Updates ' . $variant->id, [
+                                'integration' => 'sage 50',
+                                'variant' => $variant->getDirty(),
+                                'prices' => $price->getDirty()
+                            ]);
+                        }
+
                         $variant->save();
                         $price->save();
 
                         event(new ProductUpdated($variant->product));
+                    } else {
+                        if (setting('sage_50.superfluous_logging')) {
+                            Log::debug('Product Updates ' . $variant->id, [
+                                'integration' => 'sage 50',
+                                'variant' => 'no changes',
+                                'prices' => 'no changes'
+                            ]);
+                        }
                     }
                 }
             });
