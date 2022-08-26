@@ -27,6 +27,7 @@ class SageServiceProvider extends ModuleServiceProvider
 
         Settings::group('sage_50', static function (SettingGroup $group) {
             $group->boolean('enabled');
+            $group->boolean('superfluous_logging');
             $group->boolean('debug_mode')->default('false')->hint('Logs all responses and requests');
             $group->string('auth_token');
             $group->string('port');
