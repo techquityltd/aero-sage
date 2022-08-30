@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UpdateProduct implements ShouldQueue
 {
@@ -42,6 +43,12 @@ class UpdateProduct implements ShouldQueue
                 ]
             ]
         ]);
+
+        if (setting('sage_50.superfluous_logging')) {
+            Log::debug('Product Update Response', [
+                'response' => $response->getBody()->getContents(),
+            ]);
+        }
 
         $response = json_decode($response->getBody()->getContents());
 
