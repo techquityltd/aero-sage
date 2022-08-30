@@ -9,6 +9,7 @@ use Aero\Common\Providers\ModuleServiceProvider;
 use Aero\Common\Settings\SettingGroup;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Routing\Router;
+use Techquity\Aero\Sage\Console\Commands\UpdateProducts;
 use Techquity\Aero\Sage\Jobs\UpdateProduct;
 use Techquity\Aero\Sage\Listeners\CompletedOrder;
 
@@ -19,6 +20,14 @@ class SageServiceProvider extends ModuleServiceProvider
             CompletedOrder::class,
         ],
     ];
+
+    public function boot(){
+        parent::boot();
+
+        $this->commands([
+            UpdateProducts::class
+        ]);
+    }
 
     public function setup(): void
     {

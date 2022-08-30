@@ -44,13 +44,15 @@ class UpdateProduct implements ShouldQueue
             ]
         ]);
 
+        $contents = $response->getBody()->getContents();
+        
         if (setting('sage_50.superfluous_logging')) {
             Log::debug('Product Update Response', [
-                'response' => $response->getBody()->getContents(),
+                'response' => $contents,
             ]);
         }
 
-        $response = json_decode($response->getBody()->getContents());
+        $response = json_decode($contents);
 
         if ($response->success) {
             collect($response->results)->each(function ($product) {
