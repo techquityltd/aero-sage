@@ -39,6 +39,7 @@ class SageServiceProvider extends ModuleServiceProvider
             $group->boolean('enabled');
             $group->boolean('superfluous_logging');
             $group->boolean('debug_mode')->default('false')->hint('Logs all responses and requests');
+            $group->string('api_url')->default('[abc].hypersage.co.uk');
             $group->string('auth_token');
             $group->string('port');
             $group->array('currencies')->associative()->default(['GBP' => 1]);
