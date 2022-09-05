@@ -89,7 +89,6 @@ class SageServiceProvider extends ModuleServiceProvider
             $schedule = $this->app->make(Schedule::class);
 
             $schedule->command('sage:update-products')
-                ->onQueue('sage_50_import')
                 ->everyFiveMinutes()
                 ->withoutOverlapping()
                 ->onSuccess(function () {
