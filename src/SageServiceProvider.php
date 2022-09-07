@@ -86,10 +86,10 @@ class SageServiceProvider extends ModuleServiceProvider
             }
         });
 
-        $this->app->booted(static function () {
-            $schedule = app(Schedule::class);
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
 
-            $schedule->job(new UpdateProduct, 'sage_50_import')
+            $schedule->command('sage:update-products')
                 ->everyFiveMinutes()
                 ->withoutOverlapping()
                 ->onSuccess(function () {
