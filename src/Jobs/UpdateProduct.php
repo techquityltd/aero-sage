@@ -60,7 +60,7 @@ class UpdateProduct implements ShouldQueue
 
                     $price = $variant->basePrice()->first();
 
-                    if (setting('sage_50.product_stock') && $product->stock_level !== null) {
+                    if (setting('sage_50.product_stock') && $variant->stock_level !== null) {
                         $variant->stock_level = (int) $product->qtyInStock;
                     }
 
@@ -68,7 +68,7 @@ class UpdateProduct implements ShouldQueue
                         $price = $variant->basePrice()->first();
                         $price->value = $product->salesPrice * 100;
                     }
-    
+
                     if (setting('sage_50.product_detailed')) {
                         $variant->cost_value = $product->lastCostPrice * 100;
                         $variant->barcode = $product->barcode;
