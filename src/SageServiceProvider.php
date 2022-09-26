@@ -89,7 +89,7 @@ class SageServiceProvider extends ModuleServiceProvider
             $schedule = $this->app->make(Schedule::class);
 
             $schedule->command('sage:update-products')
-                ->everyFiveMinutes()
+                ->hourly()
                 ->withoutOverlapping()
                 ->onSuccess(function () {
                     if(setting('sage_50.heartbeat_logging')) {
