@@ -13,6 +13,8 @@ use Techquity\Aero\Sage\Console\Commands\UpdateProducts;
 use Techquity\Aero\Sage\Jobs\UpdateProduct;
 use Techquity\Aero\Sage\Listeners\CompletedOrder;
 use Illuminate\Support\Facades\Log;
+use Aero\Admin\Http\Requests\Customers\UpdateRequest;
+use Aero\Account\Models\Customer;
 
 class SageServiceProvider extends ModuleServiceProvider
 {
@@ -65,6 +67,12 @@ class SageServiceProvider extends ModuleServiceProvider
                 ->default(true);
         });
 
+        AdminSlot::inject('customer.edit.cards', 'sage::customer-account-id');
+
+        Customer::makeFillable('sage_account_id');
+
+        UpdateRequest::expects('sage_account_id', 'nullable|string');
+
         AdminSlot::inject('orders.order.view.header.buttons', function ($data) {
             return view('admin::resource-lists.button', [
                 'permission' => 'order.update-status',
@@ -114,5 +122,10 @@ class SageServiceProvider extends ModuleServiceProvider
                     }
                 });
         });
+    }
+
+    public function register()
+    {
+        $this->loadViewsFrom(__DIR__.'/../views', 'sage');
     }
 }
