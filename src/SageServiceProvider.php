@@ -45,6 +45,7 @@ class SageServiceProvider extends ModuleServiceProvider
             $group->array('currencies')->associative()->default(['GBP' => 1]);
             $group->integer('def_tax_code')->default(1);
             $group->string('def_nom_code')->default('4000');
+            $group->string('cron_schedule')->default('0 * * * *'); //hourly
 
             $group->string('heartbeat_api_key');
             $group->string('heartbeat_url');
@@ -86,11 +87,12 @@ class SageServiceProvider extends ModuleServiceProvider
             }
         });
 
+
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 
             $schedule->command('sage:update-products')
-                ->everyFiveMinutes()
+                ->cron(setting('sage_50.cron_schedule'))
                 ->withoutOverlapping()
                 ->onSuccess(function () {
                     if(setting('sage_50.heartbeat_logging')) {

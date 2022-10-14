@@ -45,7 +45,7 @@ class UpdateProduct implements ShouldQueue
         ]);
 
         $contents = $response->getBody()->getContents();
-        
+
         if (setting('sage_50.superfluous_logging')) {
             Log::debug('Product Update Response', [
                 'response' => $contents,
@@ -60,7 +60,7 @@ class UpdateProduct implements ShouldQueue
 
                     $price = $variant->basePrice()->first();
 
-                    if (setting('sage_50.product_stock')) {
+                    if (setting('sage_50.product_stock') && $variant->stock_level !== null) {
                         $variant->stock_level = (int) $product->qtyInStock;
                     }
 
