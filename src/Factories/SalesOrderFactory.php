@@ -49,32 +49,36 @@ class SalesOrderFactory
         $this->sales['orderDate'] = $this->order->ordered_at->format('d/m/Y');
 
         $this->setContactName($this->order->billingAddress->fullName);
+        $this->setDeliveryName($this->order->shippingAddress->fullName);
         $this->setTelephone(($this->order->billingAddress->mobile ?? $this->order->billingAddress->phone) ?? '');
 
         $this->setAddress('address', [
-            1 => (string) $this->order->billingAddress->line_1,
-            2 => (string) $this->order->billingAddress->line_2,
-            4 => (string) $this->order->billingAddress->city,
-            5 => (string) $this->order->billingAddress->postcode
+            1 => (string) $this->order->billingAddress->line_1, // Street 1
+            2 => (string) $this->order->billingAddress->line_2, // Street 2
+            3 => (string) $this->order->billingAddress->city, // Town
+            //4 => // County
+            5 => (string) $this->order->billingAddress->postcode // Postcode
         ]);
 
         // Check for gift vouchers (as they don't have shipping)
         if ($this->order->shippingAddress) {
             $this->setAddress('delAddress', [
-                1 => (string) $this->order->shippingAddress->line_1,
-                2 => (string) $this->order->shippingAddress->line_2,
-                4 => (string) $this->order->shippingAddress->city,
-                5 => (string) $this->order->shippingAddress->postcode
+                1 => (string) $this->order->shippingAddress->line_1, // Street 1
+                2 => (string) $this->order->shippingAddress->line_2, // Street 2
+                3 => (string) $this->order->shippingAddress->city, // Town
+                //4 => // County
+                5 => (string) $this->order->shippingAddress->postcode // Postcode
             ]);
 
             $this->sales['carrNet'] = round($this->order->shipping / 100, 2);
             $this->sales['carrTax'] = round($this->order->shipping_tax / 100, 2);
         } else {
             $this->setAddress('delAddress', [
-                1 => (string) $this->order->billingAddress->line_1,
-                2 => (string) $this->order->billingAddress->line_2,
-                4 => (string) $this->order->billingAddress->city,
-                5 => (string) $this->order->billingAddress->postcode
+                1 => (string) $this->order->billingAddress->line_1, // Street 1
+                2 => (string) $this->order->billingAddress->line_2, // Street 2
+                3 => (string) $this->order->billingAddress->city, // Town
+                //4 => // County
+                5 => (string) $this->order->billingAddress->postcode // Postcode
             ]);
         }
 
@@ -115,6 +119,16 @@ class SalesOrderFactory
     {
         if (strlen($name) <= 30) {
             $this->sales['contactName'] = $name;
+        }
+    }
+
+    /**
+     * Validate and set the contacts name.
+     */
+    protected function setDeliveryName(string $name): void
+    {
+        if (strlen($name) <= 30) {
+            $this->sales['delName'] = $name;
         }
     }
 

@@ -52,18 +52,20 @@ class CustomerFactory
         $this->setTelephone(($this->order->billingAddress->mobile ?? $this->order->billingAddress->phone) ?? '');
 
         $this->setAddress('address', [
-            1 => (string) $this->order->billingAddress->line_1,
-            2 => (string) $this->order->billingAddress->line_2,
-            4 => (string) $this->order->billingAddress->city,
-            5 => (string) $this->order->billingAddress->postcode
+            1 => (string) $this->order->billingAddress->line_1, // Street 1
+            2 => (string) $this->order->billingAddress->line_2, // Street 2
+            3 => (string) $this->order->billingAddress->city, // Town
+            // 4 => // County
+            5 => (string) $this->order->billingAddress->postcode // Postcode
         ]);
 
         if ($this->order->shippingAddress) {
             $this->setAddress('deliveryAddress', [
-                1 => (string) $this->order->shippingAddress->line_1,
-                2 => (string) $this->order->shippingAddress->line_2,
-                4 => (string) $this->order->shippingAddress->city,
-                5 => (string) $this->order->shippingAddress->postcode
+                1 => (string) $this->order->shippingAddress->line_1, // Street 1
+                2 => (string) $this->order->shippingAddress->line_2, // Street 2
+                3 => (string) $this->order->shippingAddress->city, // Town
+                // 4 => // County
+                5 => (string) $this->order->shippingAddress->postcode // Postcode
             ]);
         }
 
