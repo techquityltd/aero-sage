@@ -221,7 +221,7 @@ class SalesOrderFactory
             $this->order->additional('sage_order_ref', $response['response']);
 
             if (setting('sage_50.debug_mode')) {
-                Log::debug('Sage Customer', [
+                Log::debug('Sage Order', [
                     'integration' => 'sage 50',
                     'request' => $this->sales,
                     'response' => $response
