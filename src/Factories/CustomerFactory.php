@@ -130,7 +130,7 @@ class CustomerFactory
      */
     protected function setTelephone(string $telephone): void
     {
-        if (strlen($telephone) >= 30) {
+        if (strlen($telephone) <= 30) {
             $this->customer['telephone'] = $telephone;
         }
     }
@@ -197,7 +197,7 @@ class CustomerFactory
             }
 
             if (setting('sage_50.debug_mode')) {
-                Log::debug('Sage Order', [
+                Log::debug('Sage Customer', [
                     'integration' => 'sage 50',
                     'request' => $this->customer,
                     'response' => $response
