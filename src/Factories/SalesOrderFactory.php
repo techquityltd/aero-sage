@@ -49,7 +49,6 @@ class SalesOrderFactory
         $this->sales['orderDate'] = $this->order->ordered_at->format('d/m/Y');
 
         $this->setContactName($this->order->billingAddress->fullName);
-        $this->setDeliveryName($this->order->shippingAddress->fullName);
         $this->setTelephone(($this->order->billingAddress->mobile ?? $this->order->billingAddress->phone) ?? '');
 
         $this->setAddress('address', [
@@ -70,6 +69,8 @@ class SalesOrderFactory
                 5 => (string) $this->order->shippingAddress->postcode // Postcode
             ]);
 
+            $this->setDeliveryName($this->order->shippingAddress->fullName);
+
             $this->sales['carrNet'] = round($this->order->shipping / 100, 2);
             $this->sales['carrTax'] = round($this->order->shipping_tax / 100, 2);
         } else {
@@ -80,6 +81,8 @@ class SalesOrderFactory
                 //4 => // County
                 5 => (string) $this->order->billingAddress->postcode // Postcode
             ]);
+
+            $this->setDeliveryName($this->order->billingAddress->fullName);
         }
 
         //this->sales['netValueDiscountAmount'] = round($this->order->discount / 100, 2);
