@@ -179,10 +179,17 @@ class SalesOrderFactory
                 $extend = $this->extendItem($item);
             }
 
-            $options = collect($item->options)
-                ->filter(fn ($item) => isset($item['name']) && isset($item['value']))
-                ->map(fn ($item) => "{$item['name']}: {$item['value']}")
-                ->implode(', ');
+            if (setting('sage_50.remove_attribute_name')) {
+                $options = collect($item->options)
+                    ->filter(fn($item) => isset($item['value']))
+                    ->map(fn($item) => "{$item['value']}")
+                    ->implode(', ');
+            } else {
+                $options = collect($item->options)
+                    ->filter(fn ($item) => isset($item['name']) && isset($item['value']))
+                    ->map(fn ($item) => "{$item['name']}: {$item['value']}")
+                    ->implode(', ');
+            }
 
             $options = empty($options) ? '' : " ({$options})";
 
