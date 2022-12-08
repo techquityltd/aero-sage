@@ -65,6 +65,10 @@ class SageServiceProvider extends ModuleServiceProvider
             $group->boolean('product_detailed')
                 ->hint('Update products with information such as weight')
                 ->default(true);
+
+            $group->boolean('remove_attribute_name')
+                ->hint('Removes the attribute name from item description')
+                ->default(false);
         });
 
         AdminSlot::inject('customer.edit.cards', 'sage::customer-account-id');

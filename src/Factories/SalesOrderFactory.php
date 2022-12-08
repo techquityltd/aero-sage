@@ -52,30 +52,37 @@ class SalesOrderFactory
         $this->setTelephone(($this->order->billingAddress->mobile ?? $this->order->billingAddress->phone) ?? '');
 
         $this->setAddress('address', [
-            1 => (string) $this->order->billingAddress->line_1,
-            2 => (string) $this->order->billingAddress->line_2,
-            4 => (string) $this->order->billingAddress->city,
-            5 => (string) $this->order->billingAddress->postcode
+            1 => (string) $this->order->billingAddress->line_1, // Street 1
+            2 => (string) $this->order->billingAddress->line_2, // Street 2
+            3 => (string) $this->order->billingAddress->city, // Town
+            //4 => // County
+            5 => (string) $this->order->billingAddress->postcode // Postcode
         ]);
 
         // Check for gift vouchers (as they don't have shipping)
         if ($this->order->shippingAddress) {
             $this->setAddress('delAddress', [
-                1 => (string) $this->order->shippingAddress->line_1,
-                2 => (string) $this->order->shippingAddress->line_2,
-                4 => (string) $this->order->shippingAddress->city,
-                5 => (string) $this->order->shippingAddress->postcode
+                1 => (string) $this->order->shippingAddress->line_1, // Street 1
+                2 => (string) $this->order->shippingAddress->line_2, // Street 2
+                3 => (string) $this->order->shippingAddress->city, // Town
+                //4 => // County
+                5 => (string) $this->order->shippingAddress->postcode // Postcode
             ]);
+
+            $this->setDeliveryName($this->order->shippingAddress->fullName);
 
             $this->sales['carrNet'] = round($this->order->shipping / 100, 2);
             $this->sales['carrTax'] = round($this->order->shipping_tax / 100, 2);
         } else {
             $this->setAddress('delAddress', [
-                1 => (string) $this->order->billingAddress->line_1,
-                2 => (string) $this->order->billingAddress->line_2,
-                4 => (string) $this->order->billingAddress->city,
-                5 => (string) $this->order->billingAddress->postcode
+                1 => (string) $this->order->billingAddress->line_1, // Street 1
+                2 => (string) $this->order->billingAddress->line_2, // Street 2
+                3 => (string) $this->order->billingAddress->city, // Town
+                //4 => // County
+                5 => (string) $this->order->billingAddress->postcode // Postcode
             ]);
+
+            $this->setDeliveryName($this->order->billingAddress->fullName);
         }
 
         //this->sales['netValueDiscountAmount'] = round($this->order->discount / 100, 2);
@@ -115,6 +122,16 @@ class SalesOrderFactory
     {
         if (strlen($name) <= 30) {
             $this->sales['contactName'] = $name;
+        }
+    }
+
+    /**
+     * Validate and set the contacts name.
+     */
+    protected function setDeliveryName(string $name): void
+    {
+        if (strlen($name) <= 30) {
+            $this->sales['delName'] = $name;
         }
     }
 
@@ -162,10 +179,17 @@ class SalesOrderFactory
                 $extend = $this->extendItem($item);
             }
 
-            $options = collect($item->options)
-                ->filter(fn ($item) => isset($item['name']) && isset($item['value']))
-                ->map(fn ($item) => "{$item['name']}: {$item['value']}")
-                ->implode(', ');
+            if (setting('sage_50.remove_attribute_name')) {
+                $options = collect($item->options)
+                    ->filter(fn($item) => isset($item['value']))
+                    ->map(fn($item) => "{$item['value']}")
+                    ->implode(', ');
+            } else {
+                $options = collect($item->options)
+                    ->filter(fn ($item) => isset($item['name']) && isset($item['value']))
+                    ->map(fn ($item) => "{$item['name']}: {$item['value']}")
+                    ->implode(', ');
+            }
 
             $options = empty($options) ? '' : " ({$options})";
 
@@ -207,7 +231,7 @@ class SalesOrderFactory
             $this->order->additional('sage_order_ref', $response['response']);
 
             if (setting('sage_50.debug_mode')) {
-                Log::debug('Sage Customer', [
+                Log::debug('Sage Order', [
                     'integration' => 'sage 50',
                     'request' => $this->sales,
                     'response' => $response
