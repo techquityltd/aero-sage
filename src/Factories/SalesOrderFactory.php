@@ -3,6 +3,7 @@
 namespace Techquity\Aero\Sage\Factories;
 
 use Aero\Cart\Models\Order;
+use Aero\Cart\Models\OrderItem;
 use Aero\Common\Models\Currency;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
@@ -167,6 +168,17 @@ class SalesOrderFactory
         }
     }
 
+    private function getNominal(OrderItem $item): int
+    {
+        $product = $item->buyable->product;
+
+        if ($product && is_numeric($product->additional('sage_nominal'))) {
+            $nominal = (int) $product->additional('sage_nominal');
+        }
+
+        return $nominal ?? 4001;
+    }
+
     /**
      * Set the invoice items from the order items.
      */
@@ -200,7 +212,7 @@ class SalesOrderFactory
                 'unitPrice' => $item->priceRounded / 100,
                 'taxRate' => ($item->subtotalTaxRounded > 0) ? round((($item->tax / $item->price) * 100), 2) : 0,
                 'taxCode' => ($item->subtotalTaxRounded > 0) ? 1 : 0,
-                'nominal' => 4001,
+                'nominal' => $this->getNominal($item),
                 'discount' => $item->discountRounded / 100,
                 'discountAmount' => 0,
                 'netAmount' => round(($item->price * $item->quantity) - $item->discount) / 100,
