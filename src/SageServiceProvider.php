@@ -22,7 +22,8 @@ class SageServiceProvider extends ModuleServiceProvider
         ],
     ];
 
-    public function boot(){
+    public function boot()
+    {
         parent::boot();
 
         $this->commands([
@@ -94,7 +95,6 @@ class SageServiceProvider extends ModuleServiceProvider
                     ->cron(setting('sage_50.cron_schedule'))
                     ->withoutOverlapping()
                     ->onSuccess(function () {
-
                         if (setting('sage_50.heartbeat_url')) {
                             Log::debug('Sage Update Products Executed');
                             $client = new \GuzzleHttp\Client();
@@ -111,7 +111,6 @@ class SageServiceProvider extends ModuleServiceProvider
                         }
                     });
             }
-
         });
     }
 }
