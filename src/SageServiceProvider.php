@@ -22,7 +22,8 @@ class SageServiceProvider extends ModuleServiceProvider
         ],
     ];
 
-    public function boot(){
+    public function boot()
+    {
         parent::boot();
 
         $this->commands([
@@ -44,11 +45,10 @@ class SageServiceProvider extends ModuleServiceProvider
             $group->array('currencies')->associative()->default(['GBP' => 1]);
             $group->integer('def_tax_code')->default(1);
             $group->string('def_nom_code')->default('4000');
-            $group->string('cron_schedule')->default('0 * * * *'); //hourly
+            $group->string('cron_schedule');
 
             $group->string('heartbeat_api_key');
             $group->string('heartbeat_url');
-            $group->boolean('heartbeat_logging')->default('false');
 
             // Product import related settings
             $group->boolean('product_stock')
@@ -94,28 +94,27 @@ class SageServiceProvider extends ModuleServiceProvider
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 
-            $schedule->command('sage:update-products')
-                ->cron(setting('sage_50.cron_schedule'))
-                ->withoutOverlapping()
-                ->onSuccess(function () {
-                    if(setting('sage_50.heartbeat_logging')) {
-                        Log::debug('Sage Update Products Executed');
-                    }
-                    if(setting('sage_50.heartbeat_url')){
+            if (setting('sage_50.cron_schedule')) {
+                $schedule->command('sage:update-products')
+                    ->cron(setting('sage_50.cron_schedule'))
+                    ->withoutOverlapping()
+                    ->onSuccess(function () {
+                        if (setting('sage_50.heartbeat_url')) {
+                            Log::debug('Sage Update Products Executed');
+                            $client = new \GuzzleHttp\Client();
+                            $url = setting('sage_50.heartbeat_url');
+                            $token = setting('sage_50.heartbeat_api_key');
 
-                        $client = new \GuzzleHttp\Client();
-                        $url = setting('sage_50.heartbeat_url');
-                        $token = setting('sage_50.heartbeat_api_key');
+                            $headers = [
+                                'Authorization' => "Bearer $token",
+                            ];
 
-                        $headers = [
-                            'Authorization' => "Bearer $token",
-                        ];
+                            $request = new \GuzzleHttp\Psr7\Request('GET', $url, $headers);
 
-                        $request = new \GuzzleHttp\Psr7\Request('GET', $url, $headers);
-
-                        $client->sendAsync($request)->wait();
-                    }
-                });
+                            $client->sendAsync($request)->wait();
+                        }
+                    });
+            }
         });
     }
 }
