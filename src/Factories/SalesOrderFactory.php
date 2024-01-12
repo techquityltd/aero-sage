@@ -176,7 +176,7 @@ class SalesOrderFactory
             $nominal = (int) $product->additional('sage_nominal');
         }
 
-        return $nominal ?? 4001;
+        return $nominal ?? (int) setting('sage_50.sales_order_nominal');
     }
 
     /**

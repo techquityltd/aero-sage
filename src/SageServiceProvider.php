@@ -45,6 +45,7 @@ class SageServiceProvider extends ModuleServiceProvider
             $group->array('currencies')->associative()->default(['GBP' => 1]);
             $group->integer('def_tax_code')->default(1);
             $group->string('def_nom_code')->default('4000');
+            $group->string('sales_order_nominal')->default('4000');
             $group->string('cron_schedule');
 
             $group->string('heartbeat_api_key');
