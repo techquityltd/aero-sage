@@ -8,6 +8,8 @@ use Aero\Common\Models\Currency;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Traits\Macroable;
+use Aerocargo\BundleProducts\Models\BundleVariant;
+
 
 class SalesOrderFactory
 {
@@ -38,7 +40,7 @@ class SalesOrderFactory
             $this->extend();
         }
 
-        $this->updateOrCreate();
+        // $this->updateOrCreate();
     }
 
     protected function createOrder()
@@ -184,7 +186,8 @@ class SalesOrderFactory
      */
     protected function setInvoiceItems()
     {
-        $this->sales['invoiceItems'] = $this->order->items->map(function ($item) {
+        $bundles = collect([]);
+        $this->sales['invoiceItems'] = $this->order->items->map(function ($item) use ($bundles) {
 
             // Extend using a macro
             if ($this->hasMacro('extendItem')) {
@@ -205,6 +208,11 @@ class SalesOrderFactory
 
             $options = empty($options) ? '' : " ({$options})";
 
+            // If the product is a bundle, push to the bundles collection
+            if ($item->buyable->product->bundleVariants->count() > 0){
+                $bundles->push($item);
+            }
+
             return array_merge($extend ?? [], [
                 'stockCode' => $item->sku,
                 'description' => $item->name . $options,
@@ -218,6 +226,31 @@ class SalesOrderFactory
                 'netAmount' => round(($item->price * $item->quantity) - $item->discount) / 100,
             ]);
         })->toArray();
+
+        // If there are bundles, remove the items from the invoiceItems array
+        if ($bundles) {
+            foreach ($bundles as $bundle) {
+                // Get the invoice items and the bundle items
+                $invoiceItems = collect($this->sales['invoiceItems']);
+                $bundleItems = $bundle->buyable->product->bundleVariants;
+                // Loop through the invoice items and remove the bundle items
+                $invoiceItems->each(function ($item, $key) use ($bundleItems, $invoiceItems) {
+                    $matchingItem = $bundleItems->first(function ($bundleItem) use ($item) {
+                        return $bundleItem['variant']->sku === $item['stockCode'];
+                    });
+
+                    if ($matchingItem) {
+                        // Remove the quantity from the invoice item
+                        $item['quantity'] -= $matchingItem['quantity'];
+                        // If the quantity is 0, remove the item from the invoice items
+                        if ($item['quantity'] === 0) {
+                            $invoiceItems->forget($key);
+                        }
+                    }
+                });
+                $this->sales['invoiceItems'] = $invoiceItems->toArray();
+            }
+        }
     }
 
     /**
