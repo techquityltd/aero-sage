@@ -8,8 +8,6 @@ use Aero\Common\Models\Currency;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Traits\Macroable;
-use Aerocargo\BundleProducts\Models\BundleVariant;
-
 
 class SalesOrderFactory
 {
@@ -40,7 +38,7 @@ class SalesOrderFactory
             $this->extend();
         }
 
-        // $this->updateOrCreate();
+        $this->updateOrCreate();
     }
 
     protected function createOrder()

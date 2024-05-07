@@ -13,8 +13,6 @@ use Techquity\Aero\Sage\Console\Commands\UpdateProducts;
 use Techquity\Aero\Sage\Jobs\UpdateProduct;
 use Techquity\Aero\Sage\Listeners\CompletedOrder;
 use Illuminate\Support\Facades\Log;
-use Techquity\Aero\Sage\Factories\SalesOrderFactory;
-use Aero\Cart\Models\Order;
 
 class SageServiceProvider extends ModuleServiceProvider
 {
