@@ -7,6 +7,7 @@ use Aero\Common\Models\Currency;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Str;
 
 class CustomerFactory
 {
@@ -101,18 +102,7 @@ class CustomerFactory
      */
     protected function setName(?string $company, ?string $name): void
     {
-        $spacelessCompany = preg_replace("/[^A-Za-z]/", "", $company);
-        $spacelessName = preg_replace("/[^A-Za-z]/", "", $name);
-
-        if (strlen($spacelessCompany) >= 4 && strlen($spacelessCompany) <= 60) {
-            $this->customer['name'] = $company;
-        } elseif (strlen($spacelessName) >= 4 && strlen($spacelessName) <= 60) {
-            $this->customer['name'] = $name;
-        } else {
-            Log::error("Sage Issue: {$this->order->reference} - customer name invalid for sage", [
-                'integration' => 'sage 50',
-            ]);
-        }
+        $this->customer['name'] = Str::limit($company ?? $name, 60, '');
     }
 
     /**
