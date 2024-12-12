@@ -7,6 +7,7 @@ use Aero\Cart\Models\OrderItem;
 use Aero\Common\Models\Currency;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 
 class SalesOrderFactory
@@ -213,7 +214,7 @@ class SalesOrderFactory
 
             return array_merge($extend ?? [], [
                 'stockCode' => $item->sku,
-                'description' => $item->name . $options,
+                'description' => Str::limit($item->name . $options, 60),
                 'quantity' => $item->quantity,
                 'unitPrice' => $item->priceRounded / 100,
                 'taxRate' => ($item->subtotalTaxRounded > 0) ? round((($item->tax / $item->price) * 100), 2) : 0,
