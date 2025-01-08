@@ -49,6 +49,9 @@ class SageServiceProvider extends ModuleServiceProvider
             $group->string('def_nom_code')->default('4000');
             $group->string('sales_order_nominal')->default('4000');
             $group->string('cron_schedule');
+            $group->integer('item_description_char_limit')
+                ->hint('Older versions of Sage only support 60 characters, newer versions support 120 characters')
+                ->default(120);
 
             $group->string('heartbeat_api_key');
             $group->string('heartbeat_url');
