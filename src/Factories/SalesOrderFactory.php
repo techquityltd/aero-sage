@@ -214,7 +214,7 @@ class SalesOrderFactory
 
             return array_merge($extend ?? [], [
                 'stockCode' => $item->sku,
-                'description' => Str::limit($item->name . $options, setting('sage_50.item_description_char_limit', 120, '')),
+                'description' => Str::limit($item->name . $options, setting('sage_50.item_description_char_limit', 120), ''),
                 'quantity' => $item->quantity,
                 'unitPrice' => $item->priceRounded / 100,
                 'taxRate' => ($item->subtotalTaxRounded > 0) ? round((($item->tax / $item->price) * 100), 2) : 0,
