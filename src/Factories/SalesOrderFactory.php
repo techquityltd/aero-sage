@@ -258,7 +258,7 @@ class SalesOrderFactory
     public function updateOrCreate()
     {
         $client = new Client([
-            'base_uri' => sprintf('https://nbu.hypersage.co.uk:%d/api/', setting('sage_50.port')),
+            'base_uri' => sprintf('https://%s:%d/api/', setting('sage_50.api_url'), setting('sage_50.port')),
             'http_errors' => false,
             'headers' => [
                 'AuthToken' => setting('sage_50.auth_token'),

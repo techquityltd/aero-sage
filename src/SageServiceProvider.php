@@ -14,6 +14,8 @@ use Techquity\Aero\Sage\Console\Commands\UpdateProducts;
 use Techquity\Aero\Sage\Jobs\UpdateProduct;
 use Techquity\Aero\Sage\Listeners\CompletedOrder;
 use Illuminate\Support\Facades\Log;
+use Aero\Admin\Http\Requests\Customers\UpdateRequest;
+use Aero\Account\Models\Customer;
 
 class SageServiceProvider extends ModuleServiceProvider
 {
@@ -42,6 +44,7 @@ class SageServiceProvider extends ModuleServiceProvider
             $group->boolean('enabled');
             $group->boolean('superfluous_logging');
             $group->boolean('debug_mode')->default('false')->hint('Logs all responses and requests');
+            $group->string('api_url')->default('[abc].hypersage.co.uk');
             $group->string('auth_token');
             $group->string('port');
             $group->array('currencies')->associative()->default(['GBP' => 1]);
@@ -73,6 +76,12 @@ class SageServiceProvider extends ModuleServiceProvider
                 ->hint('Removes the attribute name from item description')
                 ->default(false);
         });
+
+        AdminSlot::inject('customer.edit.cards', 'sage::customer-account-id');
+
+        Customer::makeFillable('sage_account_id');
+
+        UpdateRequest::expects('sage_account_id', 'nullable|string');
 
         AdminSlot::inject('orders.order.view.header.buttons', function ($data) {
             return view('admin::resource-lists.button', [
@@ -122,5 +131,10 @@ class SageServiceProvider extends ModuleServiceProvider
                     });
             }
         });
+    }
+
+    public function register()
+    {
+        $this->loadViewsFrom(__DIR__.'/../views', 'sage');
     }
 }
