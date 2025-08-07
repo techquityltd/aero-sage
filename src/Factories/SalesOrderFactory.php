@@ -271,7 +271,7 @@ class SalesOrderFactory
 
         $response = json_decode($response->getBody()->getContents(), true);
 
-        if ($response['success']) {
+        if (isset($response['response']) && isset($response['success']) && $response['success']) {
             $this->order->additional('sage_order_ref', $response['response']);
 
             if (setting('sage_50.debug_mode')) {
@@ -282,7 +282,7 @@ class SalesOrderFactory
                 ]);
             }
         } else {
-            Log::error($response['message'], [
+            Log::error($response['message'] ?? 'Unknown error', [
                 'integration' => 'Sage 50',
                 'salesOrder' => $this->sales,
                 'response' => $response
